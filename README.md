@@ -1,1 +1,1 @@
-# hateoas-rest-api
+# Hypermedia-Driven RESTful Web Service
