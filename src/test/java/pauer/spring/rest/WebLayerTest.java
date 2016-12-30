@@ -7,29 +7,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * Created by fpauer
+ */
 @RunWith(SpringRunner.class)
-@SpringBootTest
-public class HateoasRestApiApplicationTests {
+@WebMvcTest(GreetingController.class)
+public class WebLayerTest {
 
-	@Autowired
-	private GreetingController controller;
+    @Autowired
+    private MockMvc mockMvc;
 
-	@Test
-	public void contextLoads() {
-		assertThat(controller).isNotNull();
-	}
+    @Test
+    public void shouldReturnDefaultMessage() throws Exception {
+        this.mockMvc.perform(get("/greeting")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Hello, World!")));
+    }
 
+    @Test
+    public void greetingShouldReturnMessageFromService() throws Exception {
+        this.mockMvc.perform(get("/greeting?name=Pauer")).andDo(print()).andExpect(status().isOk())
+                .andExpect(content().string(containsString("Hello, Pauer!")));
+    }
 }
